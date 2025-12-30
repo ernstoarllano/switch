@@ -18,12 +18,12 @@ export function Search({ onSearch, className = "", ref, ...props }: SearchProps)
   };
 
   return (
-    <div className="relative">
+    <div className={cn("relative", className)}>
       <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 dark:text-zinc-400 pointer-events-none" />
       <Input
         ref={ref}
         type="search"
-        className={cn("pl-10", className)}
+        className="pl-10"
         onChange={handleChange}
         {...props}
       />
