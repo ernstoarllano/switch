@@ -6,6 +6,7 @@ const STORAGE_KEY = "favorites";
 
 export function useFavorite() {
     const [favorites, setFavorites] = useState<string[]>([]);
+    const [isInitialized, setIsInitialized] = useState(false);
 
     useEffect(() => {
         const stored = localStorage.getItem(STORAGE_KEY);
@@ -17,11 +18,14 @@ export function useFavorite() {
                 setFavorites([]);
             }
         }
+        setIsInitialized(true);
     }, []);
 
     useEffect(() => {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites));
-    }, [favorites]);
+        if (isInitialized) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites));
+        }
+    }, [favorites, isInitialized]);
 
     const isFavorite = (deviceId: string) => {
         return favorites.includes(deviceId);
