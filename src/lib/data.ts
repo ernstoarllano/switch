@@ -19,7 +19,7 @@ async function maybeSimulateError(errorRate: number = 0): Promise<void> {
  */
 export async function getDevices() {
   await simulateDelay(400);
-  await maybeSimulateError(0); // Set to 0.1 for 10% error rate during testing
+  await maybeSimulateError(0.1); // Set to 0.1 for 10% error rate during testing
   return devicesData as Device[];
 }
 
@@ -28,7 +28,7 @@ export async function getDevices() {
  */
 export async function getCategories() {
   await simulateDelay(200);
-  await maybeSimulateError(0); // Set to 0.1 for 10% error rate during testing
+  await maybeSimulateError(0.1); // Set to 0.1 for 10% error rate during testing
   return categoriesData as Category[];
 }
 
@@ -37,7 +37,7 @@ export async function getCategories() {
  */
 export async function getDeviceById(id: string) {
   await simulateDelay(300);
-  await maybeSimulateError(0);
+  await maybeSimulateError(0.1); // Set to 0.1 for 10% error rate during testing
   const devices = devicesData as Device[];
   return devices.find((device) => device.id === id);
 }
