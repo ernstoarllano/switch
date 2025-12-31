@@ -44,7 +44,7 @@ export function Select({
           className
         )}
       >
-        <BaseSelect.Value className="flex-1 text-left" placeholder={placeholder}>
+        <BaseSelect.Value className="flex-1 text-left">
           {(val) => {
             const selectedOption = options.find(opt => opt.value === val);
             return selectedOption?.label || placeholder;
