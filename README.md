@@ -154,6 +154,21 @@ The `useFavorite` hook has a known hydration warning pattern:
 - **Alternative tried**: Lazy initialization (`useState(() => ...)`) eliminates the lint warning but causes hydration mismatches
 - **Decision**: Keep the `useEffect` pattern as it's the correct solution for hydrating from browser-only APIs like localStorage
 
+### Why page-level loading instead of granular Suspense?
+- **Simpler**: Single `loading.tsx` file, minimal code
+- **Good enough**: Meets the "loading states" requirement
+- **Trade-off**: Can't show partial content while sections load (e.g., filters while device grid loads)
+
+### Why static JSON imports instead of API/CMS?
+- **Simple**: No backend infrastructure needed, fast bundled data
+- **Good for demo**: Small dataset with infrequent changes
+- **Trade-off**: Content updates require code changes and redeployment
+
+### Why manual TypeScript types instead of generated?
+- **Simple**: Hand-written types in `src/types/index.ts` work well for static JSON
+- **No backend**: No API schema to derive types from
+- **Trade-off**: Types can drift from actual data, no compile-time guarantees
+
 ## What I'd Improve With More Time
 
   ### Features
@@ -165,11 +180,13 @@ The `useFavorite` hook has a known hydration warning pattern:
   6. **Keyboard shortcuts** - Quick actions (e.g., "/" to focus search)
 
 ### Technical Improvements
-1. **TanStack Query** - Better data caching and revalidation
-2. **TanStack Table** - Better data presentation and filtering
-3. **E2E tests** - Playwright for user flows
-4. **Error tracking** - Sentry or similar for production errors
-5. **Bundle analysis** - Optimize imports, code splitting
+1. **CMS or API integration** - Replace static JSON with headless CMS (Contentful, Sanity) or REST/GraphQL API for dynamic content
+2. **Type generation** - Use tRPC, OpenAPI codegen, or oRPC for end-to-end type safety from backend schema
+3. **TanStack Query** - Better data caching and revalidation
+4. **TanStack Table** - Better data presentation and filtering
+5. **E2E tests** - Playwright for user flows
+6. **Error tracking** - Sentry or similar for production errors
+7. **Bundle analysis** - Optimize imports, code splitting
 
 ### Code Quality
 1. **More granular components** - Break down larger components
