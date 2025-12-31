@@ -189,3 +189,15 @@ This project was built with assistance from Claude (Anthropic AI). AI was used f
 ### Problem Solving
 - **Debugging**: nuqs URL state serialization
 - **Trade-off discussions**: localStorage hydration approaches
+
+## Testing Error States
+
+The data fetching functions in `src/lib/data.ts` include a `maybeSimulateError` function for testing error boundaries. To test error handling:
+
+1. Open `src/lib/data.ts`
+2. Change `await maybeSimulateError(0)` to `await maybeSimulateError(1.0)` (100% error rate)
+3. Refresh the app to see error boundaries in action
+4. Click "Try again" to test the retry functionality
+5. Set back to `0` to disable errors
+
+This simulates network failures without needing to disconnect or mock network requests.
