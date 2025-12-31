@@ -59,7 +59,7 @@ export default async function Home({
   }
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen p-4 md:p-8">
       <div className="mx-auto">
         <Header
           devices={filteredDevices.length}
@@ -67,8 +67,8 @@ export default async function Home({
           selectedCategories={selectedCategories.length}
         />
 
-        <div className="relative flex gap-8">
-          <aside className="sticky top-8 w-64 shrink-0 self-start">
+        <div className="relative flex flex-col lg:flex-row gap-6 lg:gap-8">
+          <aside className="w-full lg:sticky lg:top-8 lg:w-64 lg:shrink-0 lg:self-start">
             <Filters categories={categoryList} />
           </aside>
 
