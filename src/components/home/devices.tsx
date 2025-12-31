@@ -1,16 +1,17 @@
 'use client'
 
-import type { Device } from "@/types"
+import type { Device, Category } from "@/types"
 
-import { Detail } from '@/components/device/detail'
+import { Detail } from '@/components/devices/detail'
 
 import { useFavorite } from "@/hooks/useFavorite"
 
-type HomeGridProps = {
+type DevicesProps = {
     devices: Device[];
+    categories: Category[];
 }
 
-export function HomeGrid({ devices }: HomeGridProps) {
+export function Devices({ devices, categories }: DevicesProps) {
     const { isFavorite, toggleFavorite } = useFavorite();
 
     if (devices.length === 0) {
@@ -23,6 +24,7 @@ export function HomeGrid({ devices }: HomeGridProps) {
                 <Detail
                     key={device.id}
                     device={device}
+                    categories={categories}
                     isFavorite={isFavorite(device.id)}
                     onToggleFavorite={() => toggleFavorite(device.id)}
                 />

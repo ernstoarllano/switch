@@ -1,48 +1,82 @@
-import { getDevices, getCategories } from "@/lib/data";
+import type { Device } from "@/types";
 
-import { HomeActions } from "@/components/home/actions"
-import { HomeGrid } from "@/components/home/grid";
+import { Filters } from "@/components/home/filters"
+import { Devices } from "@/components/home/devices";
+import { Header } from '@/components/home/header'
+
+import { getDevices, getCategories } from "@/lib/data";
 
 export default async function Home({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; categories?: string[] }>;
+  searchParams: Promise<{ q?: string; categories?: string | string[]; sort?: string }>;
 }) {
-  const { q, categories: selectedCategories } = await searchParams;
+  const { q, categories, sort } = await searchParams;
 
-  const [devices, categories] = await Promise.all([
+  const [devices, categoryList] = await Promise.all([
     getDevices(),
     getCategories(),
   ]);
+
+  // Normalize categories to array
+  const selectedCategories = categories
+    ? (Array.isArray(categories) ? categories : categories.split(','))
+    : [];
 
   let filteredDevices = devices;
 
   // Filter by search query
   if (q) {
     filteredDevices = filteredDevices.filter((device) =>
-      device.name.toLowerCase().includes(q.toLowerCase())
+      device.name.toLowerCase().includes(q.toLowerCase()) || device.description.toLowerCase().includes(q.toLowerCase())
     );
   }
 
   // Filter by selected categories
-  if (selectedCategories && selectedCategories.length > 0) {
+  if (selectedCategories.length > 0) {
     filteredDevices = filteredDevices.filter((device) =>
       selectedCategories.includes(device.category)
     );
   }
 
+  // Sort by selected option
+  if (sort) {
+    const [field, direction] = sort.split('-') as [string, 'asc' | 'desc'];
+
+    filteredDevices = [...filteredDevices].sort((a, b) => {
+      let comparison = 0;
+
+      if (field === "name" || field === "category") {
+        comparison = a[field as keyof Device].toString().localeCompare(
+          b[field as keyof Device].toString()
+        );
+      } else if (field === "price" || field === "rating") {
+        comparison = (a[field] as number) - (b[field] as number);
+      }
+
+      return direction === 'desc' ? -comparison : comparison;
+    });
+  }
+
   return (
     <div className="min-h-screen p-8">
-      <main className="mx-auto max-w-7xl">
-        <h1 className="text-4xl font-bold mb-8">Mini Catalog</h1>
-        <div className="flex items-center justify-between mb-8">
-          <p className="text-zinc-600 dark:text-zinc-400">
-            {filteredDevices.length} devices across {categories.length} categories
-          </p>
-          <HomeActions categories={categories} />
+      <div className="mx-auto">
+        <Header
+          devices={filteredDevices.length}
+          categories={categoryList.length}
+          selectedCategories={selectedCategories.length}
+        />
+
+        <div className="relative flex gap-8">
+          <aside className="sticky top-8 w-64 shrink-0 self-start">
+            <Filters categories={categoryList} />
+          </aside>
+
+          <main className="flex-1 min-w-0">
+            <Devices devices={filteredDevices} categories={categoryList} />
+          </main>
         </div>
-        <HomeGrid devices={filteredDevices} />
-      </main>
+      </div>
     </div>
   );
 }
